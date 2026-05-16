@@ -1,47 +1,44 @@
 <!DOCTYPE html>
 <html lang="$if(lang)$$lang$$else$en$endif$">
-<head>
-  <meta charset="utf-8">
+    <head>
+        <meta charset="utf-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>$title$</title>
+        <title>$title$</title>
 
-$if(description)$
-  <meta name="description" content="$description$">
-$endif$
+        $if(description)$
+        <meta name="description" content="$description$">
+        $endif$
 
-$if(canonical)$
-  <link rel="canonical" href="$canonical$">
-$endif$
+        $if(canonical)$
+        <link rel="canonical" href="$canonical$">
+        $endif$
 
-  <link rel="alternate" type="application/rss+xml" title="$if(site_title)$$site_title$$else$My Blog$endif$ RSS Feed" href="$if(feed_url)$$feed_url$$else$/feed.xml$endif$">
+        <link rel="stylesheet" href="$if(css)$$css$$else$/css/style.css$endif$">
+    </head>
 
-  <link rel="stylesheet" href="$if(css)$$css$$else$/css/style.css$endif$">
-</head>
+    <body>
+        <main id="content">
+            <article>
+                <header>
+                    <h1>$title$</h1>
 
-<body>
-  <main id="content">
-    <article>
-      <header>
-        <h1>$title$</h1>
+                    $if(date)$
+                        <p class="article-meta">
+                            Published on <time datetime="$date$">$date$</time>
+                        </p>
+                    $endif$
+                </header>
 
-$if(date)$
-        <p class="article-meta">
-          Published on
-          <time datetime="$date$">$date$</time>
-        </p>
-$endif$
-      </header>
+                $body$
 
-$body$
+                <hr>
 
-      <hr>
-
-      <p>
-        <a href="$if(home_url)$$home_url$$else$/$endif$">back to all articles</a>
-      </p>
-    </article>
-  </main>
-</body>
+                <p>
+                    <a href="$if(home_url)$$home_url$$else$/$endif$">back to all articles</a>
+                </p>
+            </article>
+        </main>
+    </body>
 </html>
