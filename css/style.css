@@ -1,0 +1,362 @@
+/*
+  Minimal readable blog stylesheet.
+ */  Goal: comfortable long-form reading, not visual noise.
+
+article {
+  max-width: var(--content-width);
+}
+
+article header {
+  margin-bottom: 3rem;
+}
+
+article header h1 {
+  margin-bottom: 0.4rem;
+}
+
+article time,
+.date {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ---------- Lists ---------- */
+
+ul,
+ol {
+  padding-left: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1.25em;
+}
+
+li {
+  margin-bottom: 0.4em;
+}
+
+li > ul,
+li > ol {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+
+/* ---------- Blockquotes ---------- */
+
+blockquote {
+  margin: 1.8rem 0;
+  padding-left: 1rem;
+  border-left: 4px solid var(--border);
+  color: #374151;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Code ---------- */
+
+code,
+pre {
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    monospace;
+}
+
+code {
+  padding: 0.1em 0.25em;
+  border-radius: 0.25rem;
+  background: var(--surface);
+  font-size: 0.95em;
+}
+
+pre {
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  line-height: 1.5;
+}
+
+pre code {
+  padding: 0;
+  background: transparent;
+  font-size: 0.95rem;
+}
+
+/* ---------- Images and media ---------- */
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+figure {
+  margin: 2rem 0;
+}
+
+figcaption {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* ---------- Tables ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  background: var(--surface);
+}
+
+/* ---------- Horizontal rule ---------- */
+
+hr {
+  margin: 3rem 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 600px) {
+  body {
+    padding: 1.25rem 1rem;
+    font-size: 1rem;
+  }
+
+  .site-title {
+    font-size: 1.7rem;
+  }
+
+  h1 {
+    font-size: 1.7rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+  }
+}
+*/
+
+/* ---------- Base document ---------- */
+
+:root {
+  --text: #1f2933;
+  --muted: #6b7280;
+  --background: #ffffff;
+  --surface: #f6f8fa;
+  --border: #d8dee4;
+  --link: #0969da;
+
+  /*
+    Good reading width:
+    65ch means roughly 65 characters per line.
+    This keeps text from stretching across the whole screen.
+  */
+  --content-width: 65ch;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 2rem 1rem;
+  color: var(--text);
+  background: var(--background);
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  font-size: 1.0625rem;
+  line-height: 1.7;
+
+  /*
+    Important for readability:
+    never justify long-form text on the web.
+  */
+  text-align: left;
+}
+
+/* ---------- Page layout ---------- */
+
+body > header,
+body > main,
+body > footer {
+  max-width: var(--content-width);
+  margin-inline: auto;
+}
+
+body > main {
+  margin-top: 3rem;
+}
+
+body > footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+  margin-bottom: 3rem;
+}
+
+.site-title {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.site-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-description {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+.site-nav {
+  margin-top: 1rem;
+}
+
+.site-nav a {
+  margin-right: 1rem;
+}
+
+/* ---------- Typography ---------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 2.2em;
+  margin-bottom: 0.6em;
+  line-height: 1.25;
+  color: #111827;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.55rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1.25em;
+}
+
+/*
+  Avoid huge vertical gaps after headings.
+*/
+h1 + p,
+h2 + p,
+h3 + p {
+  margin-top: 0;
+}
+
+/*
+  Do not justify paragraphs.
+  Hyphenation is also disabled by default to avoid odd breaks.
+*/
+p,
+li {
+  text-align: left;
+  hyphens: none;
+}
+
+/* ---------- Links ---------- */
+
+a {
+  color: var(--link);
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  text-decoration-thickness: 0.12em;
+}
+
+a:visited {
+  color: #8250df;
+}
+
+/* ---------- Article list ---------- */
+
+.article-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.article-item {
+  margin-bottom: 2rem;
+}
+
+.article-title {
+  margin-bottom: 0.25rem;
+  font-size: 1.2rem;
+}
+
+.article-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.article-title a:hover {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.article-meta {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.article-summary {
+  margin-bottom: 0;
+  color: #374151;
+}

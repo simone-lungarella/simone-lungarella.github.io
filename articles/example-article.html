@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>A Small Note About Simple Software</title>
+  <meta name="description" content="An example article used to test the visual style of a minimal static blog.">
+
+  <link rel="canonical" href="https://example.com/articles/example-article.html">
+  <link rel="alternate" type="application/rss+xml" title="My Blog RSS Feed" href="/feed.xml">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <h1 class="site-title">
+      <a href="/">My Blog</a>
+    </h1>
+
+    <p class="site-description">
+      Notes, experiments, and thoughts.
+    </p>
+
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/feed.xml">RSS</a>
+    </nav>
+  </header>
+
+  <main id="content">
+    <article>
+      <header>
+        <h1>A Small Note About Simple Software</h1>
+
+        <p class="article-meta">
+          Published on
+          <time datetime="2026-05-16">2026-05-16</time>
+        </p>
+      </header>
+
+      <p>
+        Simple software is often described as boring, limited, or unfinished.
+        I think this is unfair. Good simple software is not software with fewer
+        ideas. It is software where the important ideas are easier to see.
+      </p>
+
+      <p>
+        A static blog is a good example. It does not need a database, an
+        administration panel, a JavaScript framework, or a deployment pipeline
+        made of twelve different services. It can be a directory of files, a
+        stylesheet, and a small build script.
+      </p>
+
+      <h2>The value of boring structure</h2>
+
+      <p>
+        A boring structure is useful because it stays understandable over time.
+        If the layout of the project can be explained by listing a few
+        directories, the project is easier to debug, move, archive, and rebuild.
+      </p>
+
+      <p>
+        For example, this structure is enough for many personal blogs:
+      </p>
+
+      <pre><code>blog/
+├── index.html
+├── css/
+│   └── style.css
+├── articles/
+│   └── example-article.html
+├── md/
+│   └── example-article.md
+└── templates/
+    └── article.html</code></pre>
+
+      <p>
+        There is nothing clever here. That is the point. The source article
+        lives in <code>md/</code>, the generated article lives in
+        <code>articles/</code>, and the style lives in <code>css/</code>.
+      </p>
+
+      <h2>Short lines matter</h2>
+
+      <p>
+        Text is not more readable just because the screen is wider. Long lines
+        make it harder for the eye to return from the end of one line to the
+        beginning of the next. A comfortable article layout usually keeps the
+        main text column narrow enough that reading feels calm.
+      </p>
+
+      <blockquote>
+        <p>
+          A readable page does not try to fill all available space. It leaves
+          room for the reader to breathe.
+        </p>
+      </blockquote>
+
+      <p>
+        This is why the stylesheet uses a content width based on characters,
+        such as <code>65ch</code>, instead of allowing paragraphs to stretch
+        across the full browser window.
+      </p>
+
+      <h2>A small checklist</h2>
+
+      <p>
+        For a plain personal blog, I would keep the first version limited to
+        these features:
+      </p>
+
+      <ul>
+        <li>one homepage with a chronological list of articles;</li>
+        <li>one generated HTML file per article;</li>
+        <li>one shared CSS file;</li>
+        <li>one RSS feed, added later;</li>
+        <li>no JavaScript unless there is a real need for it.</li>
+      </ul>
+
+      <p>
+        That gives you a site that is easy to host almost anywhere. It also
+        means the site can be rebuilt from source files without depending on a
+        runtime application.
+      </p>
+
+      <h2>Example command</h2>
+
+      <p>
+        The article can be generated from Markdown with a command like this:
+      </p>
+
+      <pre><code>pandoc md/example-article.md \
+  --template=templates/article.html \
+  --standalone \
+  -o articles/example-article.html</code></pre>
+
+      <p>
+        The exact command can change later, but the idea remains the same:
+        Markdown is the source format, HTML is the published format.
+      </p>
+
+      <h2>A tiny comparison</h2>
+
+      <p>
+        This table is here mainly to check that tables look acceptable with the
+        stylesheet.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Approach</th>
+            <th>Runtime needed</th>
+            <th>Complexity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Plain static HTML</td>
+            <td>No</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>Static site generator</td>
+            <td>No, after build</td>
+            <td>Medium</td>
+          </tr>
+          <tr>
+            <td>Dynamic CMS</td>
+            <td>Yes</td>
+            <td>Higher</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Final thought</h2>
+
+      <p>
+        The best first version of a personal blog is probably not the most
+        feature-rich one. It is the one that makes publishing feel frictionless.
+        If writing an article means opening a Markdown file, running one command,
+        and copying a few static files to a server, that is already a strong
+        foundation.
+      </p>
+
+      <hr>
+
+      <p>
+        <a href="/">← Back to all articles</a>
+      </p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="/feed.xml">RSS</a>
+    </p>
+  </footer>
+</body>
+</html>

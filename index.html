@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>My Blog</title>
+  <meta name="description" content="Personal blog with articles, notes, experiments, and thoughts.">
+
+  <!-- Canonical URL: update this once you know the final domain -->
+  <link rel="canonical" href="https://example.com/">
+
+  <!-- RSS feed: you can create this later as /feed.xml -->
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="My Blog RSS Feed"
+    href="/feed.xml"
+  >
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <h1 class="site-title">
+      <a href="/">My Blog</a>
+    </h1>
+
+    <p class="site-description">
+      Notes, experiments, and thoughts.
+    </p>
+
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/feed.xml">RSS</a>
+    </nav>
+  </header>
+
+  <main id="content">
+    <section aria-labelledby="articles-heading">
+      <h2 id="articles-heading">Articles</h2>
+
+      <ol class="article-list">
+        <li class="article-item">
+          <article>
+            <h3 class="article-title">
+              <a href="/articles/example-article.html">
+                My First Post
+              </a>
+            </h3>
+
+            <p class="article-meta">
+              <time datetime="2026-05-16">
+                2026-05-16
+              </time>
+            </p>
+
+            <p class="article-summary">
+              Short optional summary of the article.
+            </p>
+          </article>
+        </li>
+
+        <li class="article-item">
+          <article>
+            <h3 class="article-title">
+              <a href="/articles/another-post.html">
+                Another Post
+              </a>
+            </h3>
+
+            <p class="article-meta">
+              <time datetime="2026-05-10">
+                2026-05-10
+              </time>
+            </p>
+
+            <p class="article-summary">
+              Another short optional summary.
+            </p>
+          </article>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="/feed.xml">RSS</a>
+    </p>
+  </footer>
+</body>
+</html>
