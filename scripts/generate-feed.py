@@ -11,8 +11,8 @@ from pathlib import Path
 
 # ---- config ----
 
-SITE_TITLE = "Plain Text Notes"
-SITE_URL = "https://username.github.io"
+SITE_TITLE = "Simone Lungarella"
+SITE_URL = "https://simone-lungarella.github.io"
 SITE_DESCRIPTION = "Notes, experiments, and thoughts."
 
 MD_DIR = Path("md")

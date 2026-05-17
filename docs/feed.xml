@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
   <channel>
-    <title>Plain Text Notes</title>
-    <link>https://username.github.io/</link>
+    <title>Simone Lungarella</title>
+    <link>https://simone-lungarella.github.io/</link>
     <description>Notes, experiments, and thoughts.</description>
     <language>en</language>
-    <lastBuildDate>Sun, 17 May 2026 06:31:49 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 17 May 2026 06:43:30 +0000</lastBuildDate>
     <item>
       <title>A Small Note About Simple Software 2</title>
-      <link>https://username.github.io/articles/test.html</link>
-      <guid>https://username.github.io/articles/test.html</guid>
+      <link>https://simone-lungarella.github.io/articles/test.html</link>
+      <guid>https://simone-lungarella.github.io/articles/test.html</guid>
       <pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate>
       <description>An example article used to test the visual style of a minimal static blog.</description>
       <content:encoded>&lt;![CDATA[&lt;p&gt;Simple software is often described as boring, limited, or unfinished.
