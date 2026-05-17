@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>Plain Text Notes</title>
+    <link>https://username.github.io/</link>
+    <description>Notes, experiments, and thoughts.</description>
+    <language>en</language>
+    <lastBuildDate>Sun, 17 May 2026 06:31:49 +0000</lastBuildDate>
+    <item>
+      <title>A Small Note About Simple Software 2</title>
+      <link>https://username.github.io/articles/test.html</link>
+      <guid>https://username.github.io/articles/test.html</guid>
+      <pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate>
+      <description>An example article used to test the visual style of a minimal static blog.</description>
+      <content:encoded>&lt;![CDATA[&lt;p&gt;Simple software is often described as boring, limited, or unfinished.
+I think this is unfair. Good simple software is not software with fewer
+ideas. It is software where the important ideas are easier to see.&lt;/p&gt;
+&lt;p&gt;A static blog is a good example. It does not need a database, an
+administration panel, a JavaScript framework, or a deployment pipeline
+made of twelve different services. It can be a directory of files, a
+stylesheet, and a small build script.&lt;/p&gt;
+&lt;h2 id="the-value-of-boring-structure"&gt;The value of boring
+structure&lt;/h2&gt;
+&lt;p&gt;A boring structure is useful because it stays understandable over
+time. If the layout of the project can be explained by listing a few
+directories, the project is easier to debug, move, archive, and
+rebuild.&lt;/p&gt;
+&lt;p&gt;For example, this structure is enough for many personal blogs:&lt;/p&gt;
+&lt;pre class="text"&gt;&lt;code&gt;blog/
+├── index.html
+├── css/
+│   └── style.css
+├── articles/
+│   └── example-article.html
+├── md/
+│   └── example-article.md
+└── templates/
+    └── article.html&lt;/code&gt;&lt;/pre&gt;
+]]&gt;</content:encoded>
+    </item>
+  </channel>
+</rss>
