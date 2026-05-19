@@ -364,8 +364,50 @@ hr {
 	text-decoration: none;
 }
 
-/* Dark mode */
+/* Keywords */
+code span.kw {
+  color: #005cc5;
+  font-weight: 600;
+}
 
+/* Types + classes */
+code span.dt {
+  color: #33ccff;
+}
+
+/* Methods / functions */
+code span.fu {
+  color: #0080ff;
+}
+
+code span.kw + span.fu {
+  color: #808000;
+}
+
+/* Strings */
+code span.st {
+  color: #009926;
+}
+
+/* Comments */
+code span.co {
+  color: #6a737d;
+  font-style: italic;
+}
+
+/* Numbers */
+code span.dv,
+code span.fl,
+code span.bn {
+  color: #fab387;
+}
+
+/* Annotations */
+/* code span.at { */
+/*   color: #f7833b; */
+/* } */
+
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
 	:root {
 		--text: #e5e7eb;
@@ -388,5 +430,48 @@ hr {
 	article a:visited {
 		color: var(--link);
 	}
+
+	/* Keywords */
+	code span.kw {
+	  color: #005cc5;
+	  font-weight: 600;
+	}
+
+	/* Types + classes */
+	code span.dt {
+	  color: #33ccff;
+	}
+
+	/* Methods / functions */
+	code span.fu {
+	  color: #99ccff;
+	}
+
+	code span.kw + span.fu {
+	  color: #f7f76e;
+	}
+
+	/* Strings */
+	code span.st {
+	  color: #66ff8c;
+	}
+
+	/* Comments */
+	code span.co {
+	  color: #6a737d;
+	  font-style: italic;
+	}
+
+	/* Numbers */
+	code span.dv,
+	code span.fl,
+	code span.bn {
+	  color: #fab387;
+	}
+
+	/* Annotations */
+	/* code span.at { */
+	/*   color: #fab387; */
+	/* } */
 
 }
