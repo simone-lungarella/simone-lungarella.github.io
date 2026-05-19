@@ -5,37 +5,98 @@
     <link>https://simone-lungarella.github.io/</link>
     <description>Notes, experiments, and thoughts.</description>
     <language>en</language>
-    <lastBuildDate>Sun, 17 May 2026 06:43:30 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 19 May 2026 20:16:27 +0000</lastBuildDate>
     <item>
-      <title>A Small Note About Simple Software 2</title>
-      <link>https://simone-lungarella.github.io/articles/test.html</link>
-      <guid>https://simone-lungarella.github.io/articles/test.html</guid>
-      <pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate>
-      <description>An example article used to test the visual style of a minimal static blog.</description>
-      <content:encoded>&lt;![CDATA[&lt;p&gt;Simple software is often described as boring, limited, or unfinished.
-I think this is unfair. Good simple software is not software with fewer
-ideas. It is software where the important ideas are easier to see.&lt;/p&gt;
-&lt;p&gt;A static blog is a good example. It does not need a database, an
-administration panel, a JavaScript framework, or a deployment pipeline
-made of twelve different services. It can be a directory of files, a
-stylesheet, and a small build script.&lt;/p&gt;
-&lt;h2 id="the-value-of-boring-structure"&gt;The value of boring
-structure&lt;/h2&gt;
-&lt;p&gt;A boring structure is useful because it stays understandable over
-time. If the layout of the project can be explained by listing a few
-directories, the project is easier to debug, move, archive, and
-rebuild.&lt;/p&gt;
-&lt;p&gt;For example, this structure is enough for many personal blogs:&lt;/p&gt;
-&lt;pre class="text"&gt;&lt;code&gt;blog/
-├── index.html
-├── css/
-│   └── style.css
-├── articles/
-│   └── example-article.html
-├── md/
-│   └── example-article.md
-└── templates/
-    └── article.html&lt;/code&gt;&lt;/pre&gt;
+      <title>Effective Snapshot Testing</title>
+      <link>https://simone-lungarella.github.io/articles/effective-snapshot-testing.html</link>
+      <guid>https://simone-lungarella.github.io/articles/effective-snapshot-testing.html</guid>
+      <pubDate>Sun, 17 May 2026 00:00:00 +0000</pubDate>
+      <description>The power of snapshot testing and how to make them effective</description>
+      <content:encoded>&lt;![CDATA[&lt;p&gt;Snapshot tests verify the &lt;em&gt;entire state&lt;/em&gt; of a system rather
+than individual assertions. This significantly reduces the effort
+required to write tests, as a single snapshot represents the expected
+outcome.&lt;/p&gt;
+&lt;p&gt;Keeping in mind that a snapshot test should be as narrow as it can be
+so that any changes to the snapshot are easily reviewed, let’s focus on
+a simple &lt;code&gt;java&lt;/code&gt; example:&lt;/p&gt;
+&lt;div class="sourceCode" id="cb1"&gt;&lt;pre
+class="sourceCode java"&gt;&lt;code class="sourceCode java"&gt;&lt;span id="cb1-1"&gt;&lt;a href="#cb1-1" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Test&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb1-2"&gt;&lt;a href="#cb1-2" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Sql&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;scripts &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;classpath:fixture/io2_data.sql&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb1-3"&gt;&lt;a href="#cb1-3" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="dt"&gt;void&lt;/span&gt; &lt;span class="fu"&gt;computes_kpis_from_db_state&lt;/span&gt;&lt;span class="op"&gt;()&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb1-4"&gt;&lt;a href="#cb1-4" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="dt"&gt;var&lt;/span&gt; result &lt;span class="op"&gt;=&lt;/span&gt; kpiService&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;calculateKpis&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;IO2&lt;span class="op"&gt;,&lt;/span&gt; ALL&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb1-5"&gt;&lt;a href="#cb1-5" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="co"&gt;// Verify snapshot&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb1-6"&gt;&lt;a href="#cb1-6" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    JsonApprovals&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;verifyJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;Gson&lt;/span&gt;&lt;span class="op"&gt;().&lt;/span&gt;&lt;span class="fu"&gt;toJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;result&lt;span class="op"&gt;));&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb1-7"&gt;&lt;a href="#cb1-7" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In this example, a &lt;code&gt;fixture&lt;/code&gt; provides data preparation for
+a test and the snapshot represent a single table state after logic
+execution. Even in complex systems, a snapshot should be very small;
+otherwise it becomes hard to maintain.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;One important thing to consider is to make sure that the final
+snapshot is deterministic to avoid flaky tests. In the example where we
+have &lt;code&gt;JSON&lt;/code&gt; snapshot, a developer should:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Remove inconsistent fields such as random &lt;code&gt;UUID&lt;/code&gt;s;&lt;/li&gt;
+&lt;li&gt;Remove or normalize dates, floating point numbers, etc.;&lt;/li&gt;
+&lt;li&gt;Order each field in the same way so to have a result that can be
+diffed with the previous test iteration;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="sourceCode" id="cb2"&gt;&lt;pre
+class="sourceCode java"&gt;&lt;code class="sourceCode java"&gt;&lt;span id="cb2-1"&gt;&lt;a href="#cb2-1" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Test&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb2-2"&gt;&lt;a href="#cb2-2" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Sql&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;scripts &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;classpath:fixture/io2_data.sql&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb2-3"&gt;&lt;a href="#cb2-3" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="dt"&gt;void&lt;/span&gt; &lt;span class="fu"&gt;computes_kpis_from_db_state&lt;/span&gt;&lt;span class="op"&gt;()&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb2-4"&gt;&lt;a href="#cb2-4" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id="cb2-5"&gt;&lt;a href="#cb2-5" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="co"&gt;// Enforce time usage to have deterministic dates&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb2-6"&gt;&lt;a href="#cb2-6" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="cf"&gt;try&lt;/span&gt; &lt;span class="op"&gt;(&lt;/span&gt;WithTimeZone tz &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;WithTimeZone&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="st"&gt;&amp;quot;UTC&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;))&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb2-7"&gt;&lt;a href="#cb2-7" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id="cb2-8"&gt;&lt;a href="#cb2-8" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="dt"&gt;var&lt;/span&gt; result &lt;span class="op"&gt;=&lt;/span&gt; kpiService&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;calculateKpis&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;IO2&lt;span class="op"&gt;,&lt;/span&gt; ALL&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb2-9"&gt;&lt;a href="#cb2-9" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="dt"&gt;var&lt;/span&gt; normalizedJson &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;Gson&lt;/span&gt;&lt;span class="op"&gt;().&lt;/span&gt;&lt;span class="fu"&gt;toJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="fu"&gt;normalize&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;result&lt;span class="op"&gt;));&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb2-10"&gt;&lt;a href="#cb2-10" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id="cb2-11"&gt;&lt;a href="#cb2-11" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        JsonApprovals&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;verifyJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;normalizedJson&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb2-12"&gt;&lt;a href="#cb2-12" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb2-13"&gt;&lt;a href="#cb2-13" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;A risk with tests like this, is that the simplicity of the assertion
+makes it easy to correct when a test starts failing, for that reason I
+suggest to use classic assertions to capture broader concepts that
+should remain &lt;code&gt;true&lt;/code&gt; for the particular test.&lt;/p&gt;
+&lt;div class="sourceCode" id="cb3"&gt;&lt;pre
+class="sourceCode java"&gt;&lt;code class="sourceCode java"&gt;&lt;span id="cb3-1"&gt;&lt;a href="#cb3-1" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Test&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-2"&gt;&lt;a href="#cb3-2" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Sql&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;scripts &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;classpath:fixture/io2_data.sql&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-3"&gt;&lt;a href="#cb3-3" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="dt"&gt;void&lt;/span&gt; &lt;span class="fu"&gt;computes_kpis_from_db_state&lt;/span&gt;&lt;span class="op"&gt;()&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-4"&gt;&lt;a href="#cb3-4" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id="cb3-5"&gt;&lt;a href="#cb3-5" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="co"&gt;// Enforce time usage to have deterministic dates&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-6"&gt;&lt;a href="#cb3-6" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="cf"&gt;try&lt;/span&gt; &lt;span class="op"&gt;(&lt;/span&gt;WithTimeZone tz &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;WithTimeZone&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="st"&gt;&amp;quot;UTC&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;))&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-7"&gt;&lt;a href="#cb3-7" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id="cb3-8"&gt;&lt;a href="#cb3-8" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="dt"&gt;var&lt;/span&gt; result &lt;span class="op"&gt;=&lt;/span&gt; kpiService&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;calculateKpis&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;IO2&lt;span class="op"&gt;,&lt;/span&gt; ALL&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-9"&gt;&lt;a href="#cb3-9" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="dt"&gt;var&lt;/span&gt; normalizedJson &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;Gson&lt;/span&gt;&lt;span class="op"&gt;().&lt;/span&gt;&lt;span class="fu"&gt;toJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="fu"&gt;normalize&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;result&lt;span class="op"&gt;));&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-10"&gt;&lt;a href="#cb3-10" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id="cb3-11"&gt;&lt;a href="#cb3-11" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="fu"&gt;assertNull&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;result&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;getError&lt;/span&gt;&lt;span class="op"&gt;());&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-12"&gt;&lt;a href="#cb3-12" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="fu"&gt;assertEquals&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="dv"&gt;100&lt;/span&gt;&lt;span class="op"&gt;,&lt;/span&gt; result&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;getProgressPercent&lt;/span&gt;&lt;span class="op"&gt;());&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-13"&gt;&lt;a href="#cb3-13" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id="cb3-14"&gt;&lt;a href="#cb3-14" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        JsonApprovals&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;verifyJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;normalizedJson&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-15"&gt;&lt;a href="#cb3-15" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb3-16"&gt;&lt;a href="#cb3-16" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This does mitigate the risk but does not prevent developers from
+updating snapshots without fully understanding the change; however, if
+you are serious about programming, a good approach to this problem is
+fixing a snapshot instead of replacing it when code changes invalidate
+the test. For that, one can leverage tools such as &lt;code&gt;jq&lt;/code&gt; which
+is useful to compare two &lt;code&gt;JSON&lt;/code&gt; files.&lt;/p&gt;
+&lt;p&gt;For example, you can normalize and diff snapshots locally:&lt;/p&gt;
+&lt;div class="sourceCode" id="cb4"&gt;&lt;pre
+class="sourceCode bash"&gt;&lt;code class="sourceCode bash"&gt;&lt;span id="cb4-1"&gt;&lt;a href="#cb4-1" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="fu"&gt;diff&lt;/span&gt; &lt;span class="op"&gt;&amp;lt;(&lt;/span&gt;&lt;span class="ex"&gt;jq&lt;/span&gt; &lt;span class="st"&gt;&amp;#39;del(.timestamp) | sort_keys&amp;#39;&lt;/span&gt; received.json&lt;span class="op"&gt;)&lt;/span&gt; &lt;span class="dt"&gt;\&lt;/span&gt;&lt;/span&gt;
+&lt;span id="cb4-2"&gt;&lt;a href="#cb4-2" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;     &lt;span class="op"&gt;&amp;lt;(&lt;/span&gt;&lt;span class="ex"&gt;jq&lt;/span&gt; &lt;span class="st"&gt;&amp;#39;del(.timestamp) | sort_keys&amp;#39;&lt;/span&gt; approved.json&lt;span class="op"&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This approach makes any change intentional and specific so that any
+code review can treat it just like any other piece of logic.&lt;/p&gt;
+&lt;h2 id="other-readings"&gt;Other readings&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a
+href="https://giacomocavalieri.me/writing/testing-can-be-fun-actually"&gt;Testing
+can be fun, actually&lt;/a&gt; by Giacomo Cavalieri;&lt;/li&gt;
+&lt;li&gt;&lt;a
+href="https://github.com/approvals/ApprovalTests.Java/blob/master/approvaltests/docs/README.md"&gt;Snapshot
+testing in Java&lt;/a&gt; with ApprovalsTest;&lt;/li&gt;
+&lt;/ul&gt;
 ]]&gt;</content:encoded>
     </item>
   </channel>

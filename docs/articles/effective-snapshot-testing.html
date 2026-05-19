@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Effective Snapshot Testing</title>
+
+                <meta name="description" content="The power of snapshot
+testing and how to make them effective">
+        
+        
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+
+    <body>
+        <main id="content">
+            <article>
+                <header>
+                    <h1>Effective Snapshot Testing</h1>
+
+                                            <p class="article-meta">
+                            Published on <time datetime="2026-05-17">2026-05-17</time>
+                        </p>
+                                    </header>
+
+                <p>Snapshot tests verify the <em>entire state</em> of a
+                system rather than individual assertions. This
+                significantly reduces the effort required to write
+                tests, as a single snapshot represents the expected
+                outcome.</p>
+                <p>Keeping in mind that a snapshot test should be as
+                narrow as it can be so that any changes to the snapshot
+                are easily reviewed, let’s focus on a simple
+                <code>java</code> example:</p>
+                <div class="sourceCode" id="cb1"><pre
+                class="sourceCode java"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="at">@Test</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">@Sql</span><span class="op">(</span>scripts <span class="op">=</span> <span class="st">&quot;classpath:fixture/io2_data.sql&quot;</span><span class="op">)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="fu">computes_kpis_from_db_state</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">var</span> result <span class="op">=</span> kpiService<span class="op">.</span><span class="fu">calculateKpis</span><span class="op">(</span>IO2<span class="op">,</span> ALL<span class="op">);</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Verify snapshot</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    JsonApprovals<span class="op">.</span><span class="fu">verifyJson</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Gson</span><span class="op">().</span><span class="fu">toJson</span><span class="op">(</span>result<span class="op">));</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+                <p>In this example, a <code>fixture</code> provides data
+                preparation for a test and the snapshot represent a
+                single table state after logic execution. Even in
+                complex systems, a snapshot should be very small;
+                otherwise it becomes hard to maintain.</p>
+                <hr />
+                <p>One important thing to consider is to make sure that
+                the final snapshot is deterministic to avoid flaky
+                tests. In the example where we have <code>JSON</code>
+                snapshot, a developer should:</p>
+                <ul>
+                <li>Remove inconsistent fields such as random
+                <code>UUID</code>s;</li>
+                <li>Remove or normalize dates, floating point numbers,
+                etc.;</li>
+                <li>Order each field in the same way so to have a result
+                that can be diffed with the previous test
+                iteration;</li>
+                </ul>
+                <div class="sourceCode" id="cb2"><pre
+                class="sourceCode java"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at">@Test</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">@Sql</span><span class="op">(</span>scripts <span class="op">=</span> <span class="st">&quot;classpath:fixture/io2_data.sql&quot;</span><span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="fu">computes_kpis_from_db_state</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Enforce time usage to have deterministic dates</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> <span class="op">(</span>WithTimeZone tz <span class="op">=</span> <span class="kw">new</span> <span class="fu">WithTimeZone</span><span class="op">(</span><span class="st">&quot;UTC&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">var</span> result <span class="op">=</span> kpiService<span class="op">.</span><span class="fu">calculateKpis</span><span class="op">(</span>IO2<span class="op">,</span> ALL<span class="op">);</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">var</span> normalizedJson <span class="op">=</span> <span class="kw">new</span> <span class="fu">Gson</span><span class="op">().</span><span class="fu">toJson</span><span class="op">(</span><span class="fu">normalize</span><span class="op">(</span>result<span class="op">));</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        JsonApprovals<span class="op">.</span><span class="fu">verifyJson</span><span class="op">(</span>normalizedJson<span class="op">);</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+                <p>A risk with tests like this, is that the simplicity
+                of the assertion makes it easy to correct when a test
+                starts failing, for that reason I suggest to use classic
+                assertions to capture broader concepts that should
+                remain <code>true</code> for the particular test.</p>
+                <div class="sourceCode" id="cb3"><pre
+                class="sourceCode java"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="at">@Test</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">@Sql</span><span class="op">(</span>scripts <span class="op">=</span> <span class="st">&quot;classpath:fixture/io2_data.sql&quot;</span><span class="op">)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="fu">computes_kpis_from_db_state</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Enforce time usage to have deterministic dates</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> <span class="op">(</span>WithTimeZone tz <span class="op">=</span> <span class="kw">new</span> <span class="fu">WithTimeZone</span><span class="op">(</span><span class="st">&quot;UTC&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">var</span> result <span class="op">=</span> kpiService<span class="op">.</span><span class="fu">calculateKpis</span><span class="op">(</span>IO2<span class="op">,</span> ALL<span class="op">);</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">var</span> normalizedJson <span class="op">=</span> <span class="kw">new</span> <span class="fu">Gson</span><span class="op">().</span><span class="fu">toJson</span><span class="op">(</span><span class="fu">normalize</span><span class="op">(</span>result<span class="op">));</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">assertNull</span><span class="op">(</span>result<span class="op">.</span><span class="fu">getError</span><span class="op">());</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">assertEquals</span><span class="op">(</span><span class="dv">100</span><span class="op">,</span> result<span class="op">.</span><span class="fu">getProgressPercent</span><span class="op">());</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        JsonApprovals<span class="op">.</span><span class="fu">verifyJson</span><span class="op">(</span>normalizedJson<span class="op">);</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+                <p>This does mitigate the risk but does not prevent
+                developers from updating snapshots without fully
+                understanding the change; however, if you are serious
+                about programming, a good approach to this problem is
+                fixing a snapshot instead of replacing it when code
+                changes invalidate the test. For that, one can leverage
+                tools such as <code>jq</code> which is useful to compare
+                two <code>JSON</code> files.</p>
+                <p>For example, you can normalize and diff snapshots
+                locally:</p>
+                <div class="sourceCode" id="cb4"><pre
+                class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> <span class="op">&lt;(</span><span class="ex">jq</span> <span class="st">&#39;del(.timestamp) | sort_keys&#39;</span> received.json<span class="op">)</span> <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>     <span class="op">&lt;(</span><span class="ex">jq</span> <span class="st">&#39;del(.timestamp) | sort_keys&#39;</span> approved.json<span class="op">)</span></span></code></pre></div>
+                <p>This approach makes any change intentional and
+                specific so that any code review can treat it just like
+                any other piece of logic.</p>
+                <h2 id="other-readings">Other readings</h2>
+                <ul>
+                <li><a
+                href="https://giacomocavalieri.me/writing/testing-can-be-fun-actually">Testing
+                can be fun, actually</a> by Giacomo Cavalieri;</li>
+                <li><a
+                href="https://github.com/approvals/ApprovalTests.Java/blob/master/approvaltests/docs/README.md">Snapshot
+                testing in Java</a> with ApprovalsTest;</li>
+                </ul>
+
+                <hr>
+
+                <p>
+                    <a href="/">back to all articles</a>
+                </p>
+            </article>
+        </main>
+    </body>
+</html>
