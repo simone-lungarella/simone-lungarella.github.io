@@ -74,7 +74,7 @@ body > footer {
 
 .site-description {
 	margin-top: 0.5rem;
-	color: var(--muted);
+	color: var(--text);
 }
 
 h1 {
@@ -182,13 +182,13 @@ a:visited {
 
 .article-meta {
 	margin-bottom: 0.5rem;
-	color: var(--muted);
+	color: var(--text);
 	font-size: 0.95rem;
 }
 
 .article-summary {
 	margin-bottom: 0;
-	color: #374151;
+	color: var(--muted);
 }
 
 /* ---------- Article pages ---------- */
