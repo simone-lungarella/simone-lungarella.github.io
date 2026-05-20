@@ -10,7 +10,7 @@ and distraction-free.
 
 ## The `PACH` Stack
 
-This blog is built using what I like to call the **PACH stack**:
+This blog is built using the **PACH stack**:
 
 - **PA**ndoc → Markdown → HTML conversion  
 - **C**SS → styling  
