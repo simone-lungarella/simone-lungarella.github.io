@@ -79,7 +79,6 @@ body > footer {
 }
 
 h1 {
-	font-family: sans-serif;
 	border-bottom: 1px solid #ccc;
 	padding-bottom: 0.2em;
 	margin-top: 2em;
@@ -247,18 +246,6 @@ blockquote p:last-child {
 
 /* ---------- Code ---------- */
 
-code,
-pre {
-	font-family:
-	ui-monospace,
-	SFMono-Regular,
-	Menlo,
-	Monaco,
-	Consolas,
-	"Liberation Mono",
-	monospace;
-}
-
 code {
 	padding: 0.1em 0.25em;
 	border-radius: 0.25rem;
@@ -368,7 +355,6 @@ hr {
 .site-links {
     margin-top: 0.5rem;
     opacity: 0.5;
-    font-family: monospace;
     letter-spacing: 0.02em;
 }
 
