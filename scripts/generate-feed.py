@@ -27,18 +27,16 @@ def read_front_matter(path: Path) -> dict[str, str]:
     if not text.startswith("---\n"):
         return {}
 
-    end = text.find("\n---\n", 4)
-    if end == -1:
+    try:
+        raw, _ = text[4:].split("\n---\n", 1)
+    except ValueError:
         return {}
 
-    raw = text[4:end]
     meta = {}
-
     for line in raw.splitlines():
-        if ":" not in line:
-            continue
-        key, value = line.split(":", 1)
-        meta[key.strip()] = value.strip().strip('"').strip("'")
+        if ":" in line:
+            key, value = line.split(":", 1)
+            meta[key.strip()] = value.strip().strip('"').strip("'")
 
     return meta
 
@@ -53,13 +51,12 @@ def rfc822(dt: datetime) -> str:
 
 
 def article_url(md_path: Path) -> str:
-    slug = md_path.stem
-    return f"{SITE_URL}/articles/{slug}.html"
+    return f"{SITE_URL}/articles/{md_path.stem}.html"
 
 
 def render_html_fragment(md_path: Path) -> str:
     """
-    Use pandoc to convert Markdown → HTML fragment (no full page)
+    Convert Markdown → HTML fragment (clean, RSS-friendly)
     """
     result = subprocess.run(
         [
@@ -79,7 +76,7 @@ def render_html_fragment(md_path: Path) -> str:
 def main():
     articles = []
 
-    for path in MD_DIR.glob("*.md"):
+    for path in sorted(MD_DIR.glob("*.md")):
         meta = read_front_matter(path)
 
         title = meta.get("title")
@@ -90,23 +87,18 @@ def main():
 
         date = parse_date(date_str)
 
-        description = meta.get("description", "")
-
-        html_content = render_html_fragment(path)
-
         articles.append({
             "title": title,
             "date": date,
-            "date_str": date_str,
-            "description": description,
+            "description": meta.get("description", ""),
             "url": article_url(path),
-            "content": html_content,
+            "content": render_html_fragment(path),
         })
 
     # newest first
     articles.sort(key=lambda x: x["date"], reverse=True)
 
-    # ---- RSS building ----
+    # ---- RSS ----
 
     rss = ET.Element(
         "rss",
@@ -127,30 +119,25 @@ def main():
 
         ET.SubElement(item, "title").text = a["title"]
         ET.SubElement(item, "link").text = a["url"]
-        ET.SubElement(item, "guid").text = a["url"]
+
+        guid = ET.SubElement(item, "guid")
+        guid.text = a["url"]
+        guid.set("isPermaLink", "true")
+
         ET.SubElement(item, "pubDate").text = rfc822(a["date"])
 
         if a["description"]:
             ET.SubElement(item, "description").text = a["description"]
 
-        # full content (CDATA required)
         content = ET.SubElement(item, "content:encoded")
-        content.text = f"<![CDATA[{a['content']}]]>"
+        content.text = a["content"]   # ✅ correct (no fake CDATA)
 
-    # pretty print
-    tree = ET.ElementTree(rss)
-    ET.indent(tree, space="  ", level=0)
-
-    # write file
+    # write file (clean)
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    OUTPUT_FILE.write_text(
-        '<?xml version="1.0" encoding="UTF-8"?>\n',
-        encoding="utf-8"
-    )
-
-    with OUTPUT_FILE.open("ab") as f:
-        tree.write(f, encoding="utf-8", xml_declaration=False)
+    tree = ET.ElementTree(rss)
+    ET.indent(tree, space="  ", level=0)
+    tree.write(OUTPUT_FILE, encoding="utf-8", xml_declaration=True)
 
     print(f"Generated {OUTPUT_FILE}")
 
