@@ -5,7 +5,7 @@
     <link>https://simone-lungarella.github.io/</link>
     <description>Notes, experiments, and thoughts.</description>
     <language>en</language>
-    <lastBuildDate>Wed, 20 May 2026 04:57:19 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 20 May 2026 11:29:48 +0000</lastBuildDate>
     <item>
       <title>Effective Snapshot Testing</title>
       <link>https://simone-lungarella.github.io/articles/effective-snapshot-testing.html</link>
@@ -27,13 +27,13 @@ void computes_kpis_from_db_state() {
     JsonApprovals.verifyJson(new Gson().toJson(result));
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;In this example, a &lt;code&gt;fixture&lt;/code&gt; provides data preparation for
-a test and the snapshot represent a single table state after logic
-execution. Even in complex systems, a snapshot should be very small;
-otherwise it becomes hard to maintain.&lt;/p&gt;
+a test and the snapshot represents the expected full output state after
+logic execution. Even in complex systems, a snapshot should be very
+small; otherwise it becomes hard to maintain.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;One important thing to consider is to make sure that the final
-snapshot is deterministic to avoid flaky tests. In the example where we
-have &lt;code&gt;JSON&lt;/code&gt; snapshot, a developer should:&lt;/p&gt;
+snapshot is deterministic to avoid &lt;em&gt;flaky&lt;/em&gt; tests. In the example
+where we have &lt;code&gt;JSON&lt;/code&gt; snapshot, a developer should:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Remove inconsistent fields such as random &lt;code&gt;UUID&lt;/code&gt;s;&lt;/li&gt;
 &lt;li&gt;Remove or normalize dates, floating point numbers, etc.;&lt;/li&gt;
@@ -75,10 +75,11 @@ void computes_kpis_from_db_state() {
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This does mitigate the risk but does not prevent developers from
 updating snapshots without fully understanding the change; however, if
-you are serious about programming, a good approach to this problem is
-fixing a snapshot instead of replacing it when code changes invalidate
-the test. For that, one can leverage tools such as &lt;code&gt;jq&lt;/code&gt; which
-is useful to compare two &lt;code&gt;JSON&lt;/code&gt; files.&lt;/p&gt;
+you are serious about programming, a good approach to this problem is to
+treat failing snapshots as failing code and not replace them whenever
+code changes make test fail. For that, one can leverage tools such as
+&lt;code&gt;jq&lt;/code&gt; which is useful to compare two &lt;code&gt;JSON&lt;/code&gt;
+files.&lt;/p&gt;
 &lt;p&gt;For example, you can normalize and diff snapshots locally:&lt;/p&gt;
 &lt;pre class="bash"&gt;&lt;code&gt;diff &amp;lt;(jq &amp;#39;del(.timestamp) | sort_keys&amp;#39; received.json) \
      &amp;lt;(jq &amp;#39;del(.timestamp) | sort_keys&amp;#39; approved.json)&lt;/code&gt;&lt;/pre&gt;

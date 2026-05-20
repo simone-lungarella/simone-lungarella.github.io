@@ -24,14 +24,14 @@ void computes_kpis_from_db_state() {
 ```
 
 In this example, a `fixture` provides data preparation for a test and the
-snapshot represent a single table state after logic execution. Even in complex
-systems, a snapshot should be very small; otherwise it becomes hard to
-maintain.
+snapshot represents the expected full output state after logic execution. Even
+in complex systems, a snapshot should be very small; otherwise it becomes hard
+to maintain.
 
 ---
 
 One important thing to consider is to make sure that the final snapshot is
-deterministic to avoid flaky tests. In the example where we have `JSON`
+deterministic to avoid _flaky_ tests. In the example where we have `JSON`
 snapshot, a developer should:
 
 - Remove inconsistent fields such as random `UUID`s;
@@ -81,9 +81,10 @@ void computes_kpis_from_db_state() {
 
 This does mitigate the risk but does not prevent developers from updating
 snapshots without fully understanding the change; however, if you are serious
-about programming, a good approach to this problem is fixing a snapshot instead
-of replacing it when code changes invalidate the test. For that, one can
-leverage tools such as `jq` which is useful to compare two `JSON` files.
+about programming, a good approach to this problem is to treat failing
+snapshots as failing code and not replace them whenever code changes make test
+fail. For that, one can leverage tools such as `jq` which is useful to compare
+two `JSON` files.
 
 For example, you can normalize and diff snapshots locally:
 

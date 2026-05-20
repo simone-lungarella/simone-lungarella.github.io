@@ -44,15 +44,15 @@ testing and how to make them effective">
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    JsonApprovals<span class="op">.</span><span class="fu">verifyJson</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Gson</span><span class="op">().</span><span class="fu">toJson</span><span class="op">(</span>result<span class="op">));</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
                 <p>In this example, a <code>fixture</code> provides data
-                preparation for a test and the snapshot represent a
-                single table state after logic execution. Even in
-                complex systems, a snapshot should be very small;
+                preparation for a test and the snapshot represents the
+                expected full output state after logic execution. Even
+                in complex systems, a snapshot should be very small;
                 otherwise it becomes hard to maintain.</p>
                 <hr />
                 <p>One important thing to consider is to make sure that
-                the final snapshot is deterministic to avoid flaky
-                tests. In the example where we have <code>JSON</code>
-                snapshot, a developer should:</p>
+                the final snapshot is deterministic to avoid
+                <em>flaky</em> tests. In the example where we have
+                <code>JSON</code> snapshot, a developer should:</p>
                 <ul>
                 <li>Remove inconsistent fields such as random
                 <code>UUID</code>s;</li>
@@ -101,11 +101,11 @@ testing and how to make them effective">
                 <p>This does mitigate the risk but does not prevent
                 developers from updating snapshots without fully
                 understanding the change; however, if you are serious
-                about programming, a good approach to this problem is
-                fixing a snapshot instead of replacing it when code
-                changes invalidate the test. For that, one can leverage
-                tools such as <code>jq</code> which is useful to compare
-                two <code>JSON</code> files.</p>
+                about programming, a good approach to this problem is to
+                treat failing snapshots as failing code and not replace
+                them whenever code changes make test fail. For that, one
+                can leverage tools such as <code>jq</code> which is
+                useful to compare two <code>JSON</code> files.</p>
                 <p>For example, you can normalize and diff snapshots
                 locally:</p>
                 <div class="sourceCode" id="cb4"><pre
