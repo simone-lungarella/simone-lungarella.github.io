@@ -25,6 +25,7 @@ body {
 	background: var(--background);
 
 	font-family:
+	monospace,
 	system-ui,
 	-apple-system,
 	BlinkMacSystemFont,
@@ -362,6 +363,23 @@ hr {
 .site-title a:visited {
 	color: inherit;
 	text-decoration: none;
+}
+
+.site-links {
+    margin-top: 0.5rem;
+    opacity: 0.5;
+    font-family: monospace;
+    letter-spacing: 0.02em;
+}
+
+.site-links a,
+.site-links a:visited {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.site-links a:hover {
+    color: var(--text);
 }
 
 /* Keywords */
