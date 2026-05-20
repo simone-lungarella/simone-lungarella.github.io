@@ -62,7 +62,12 @@ def render_html_fragment(md_path: Path) -> str:
     Use pandoc to convert Markdown → HTML fragment (no full page)
     """
     result = subprocess.run(
-        ["pandoc", str(md_path), "-t", "html"],
+        [
+            "pandoc",
+            str(md_path),
+            "-t", "html",
+            "--no-highlight",
+        ],
         check=True,
         capture_output=True,
     )

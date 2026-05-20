@@ -5,7 +5,7 @@
     <link>https://simone-lungarella.github.io/</link>
     <description>Notes, experiments, and thoughts.</description>
     <language>en</language>
-    <lastBuildDate>Tue, 19 May 2026 20:16:27 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 20 May 2026 04:36:34 +0000</lastBuildDate>
     <item>
       <title>Effective Snapshot Testing</title>
       <link>https://simone-lungarella.github.io/articles/effective-snapshot-testing.html</link>
@@ -19,14 +19,13 @@ outcome.&lt;/p&gt;
 &lt;p&gt;Keeping in mind that a snapshot test should be as narrow as it can be
 so that any changes to the snapshot are easily reviewed, let’s focus on
 a simple &lt;code&gt;java&lt;/code&gt; example:&lt;/p&gt;
-&lt;div class="sourceCode" id="cb1"&gt;&lt;pre
-class="sourceCode java"&gt;&lt;code class="sourceCode java"&gt;&lt;span id="cb1-1"&gt;&lt;a href="#cb1-1" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Test&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb1-2"&gt;&lt;a href="#cb1-2" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Sql&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;scripts &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;classpath:fixture/io2_data.sql&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;)&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb1-3"&gt;&lt;a href="#cb1-3" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="dt"&gt;void&lt;/span&gt; &lt;span class="fu"&gt;computes_kpis_from_db_state&lt;/span&gt;&lt;span class="op"&gt;()&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb1-4"&gt;&lt;a href="#cb1-4" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="dt"&gt;var&lt;/span&gt; result &lt;span class="op"&gt;=&lt;/span&gt; kpiService&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;calculateKpis&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;IO2&lt;span class="op"&gt;,&lt;/span&gt; ALL&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb1-5"&gt;&lt;a href="#cb1-5" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="co"&gt;// Verify snapshot&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb1-6"&gt;&lt;a href="#cb1-6" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    JsonApprovals&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;verifyJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;Gson&lt;/span&gt;&lt;span class="op"&gt;().&lt;/span&gt;&lt;span class="fu"&gt;toJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;result&lt;span class="op"&gt;));&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb1-7"&gt;&lt;a href="#cb1-7" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="java"&gt;&lt;code&gt;@Test
+@Sql(scripts = &amp;quot;classpath:fixture/io2_data.sql&amp;quot;)
+void computes_kpis_from_db_state() {
+    var result = kpiService.calculateKpis(IO2, ALL);
+    // Verify snapshot
+    JsonApprovals.verifyJson(new Gson().toJson(result));
+}&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;In this example, a &lt;code&gt;fixture&lt;/code&gt; provides data preparation for
 a test and the snapshot represent a single table state after logic
 execution. Even in complex systems, a snapshot should be very small;
@@ -41,41 +40,39 @@ have &lt;code&gt;JSON&lt;/code&gt; snapshot, a developer should:&lt;/p&gt;
 &lt;li&gt;Order each field in the same way so to have a result that can be
 diffed with the previous test iteration;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class="sourceCode" id="cb2"&gt;&lt;pre
-class="sourceCode java"&gt;&lt;code class="sourceCode java"&gt;&lt;span id="cb2-1"&gt;&lt;a href="#cb2-1" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Test&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb2-2"&gt;&lt;a href="#cb2-2" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Sql&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;scripts &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;classpath:fixture/io2_data.sql&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;)&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb2-3"&gt;&lt;a href="#cb2-3" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="dt"&gt;void&lt;/span&gt; &lt;span class="fu"&gt;computes_kpis_from_db_state&lt;/span&gt;&lt;span class="op"&gt;()&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb2-4"&gt;&lt;a href="#cb2-4" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id="cb2-5"&gt;&lt;a href="#cb2-5" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="co"&gt;// Enforce time usage to have deterministic dates&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb2-6"&gt;&lt;a href="#cb2-6" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="cf"&gt;try&lt;/span&gt; &lt;span class="op"&gt;(&lt;/span&gt;WithTimeZone tz &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;WithTimeZone&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="st"&gt;&amp;quot;UTC&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;))&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb2-7"&gt;&lt;a href="#cb2-7" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id="cb2-8"&gt;&lt;a href="#cb2-8" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="dt"&gt;var&lt;/span&gt; result &lt;span class="op"&gt;=&lt;/span&gt; kpiService&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;calculateKpis&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;IO2&lt;span class="op"&gt;,&lt;/span&gt; ALL&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb2-9"&gt;&lt;a href="#cb2-9" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="dt"&gt;var&lt;/span&gt; normalizedJson &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;Gson&lt;/span&gt;&lt;span class="op"&gt;().&lt;/span&gt;&lt;span class="fu"&gt;toJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="fu"&gt;normalize&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;result&lt;span class="op"&gt;));&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb2-10"&gt;&lt;a href="#cb2-10" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id="cb2-11"&gt;&lt;a href="#cb2-11" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        JsonApprovals&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;verifyJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;normalizedJson&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb2-12"&gt;&lt;a href="#cb2-12" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb2-13"&gt;&lt;a href="#cb2-13" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="java"&gt;&lt;code&gt;@Test
+@Sql(scripts = &amp;quot;classpath:fixture/io2_data.sql&amp;quot;)
+void computes_kpis_from_db_state() {
+
+    // Enforce time usage to have deterministic dates
+    try (WithTimeZone tz = new WithTimeZone(&amp;quot;UTC&amp;quot;)) {
+
+        var result = kpiService.calculateKpis(IO2, ALL);
+        var normalizedJson = new Gson().toJson(normalize(result));
+
+        JsonApprovals.verifyJson(normalizedJson);
+    }
+}&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;A risk with tests like this, is that the simplicity of the assertion
 makes it easy to correct when a test starts failing, for that reason I
 suggest to use classic assertions to capture broader concepts that
 should remain &lt;code&gt;true&lt;/code&gt; for the particular test.&lt;/p&gt;
-&lt;div class="sourceCode" id="cb3"&gt;&lt;pre
-class="sourceCode java"&gt;&lt;code class="sourceCode java"&gt;&lt;span id="cb3-1"&gt;&lt;a href="#cb3-1" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Test&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-2"&gt;&lt;a href="#cb3-2" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="at"&gt;@Sql&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;scripts &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;classpath:fixture/io2_data.sql&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;)&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-3"&gt;&lt;a href="#cb3-3" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="dt"&gt;void&lt;/span&gt; &lt;span class="fu"&gt;computes_kpis_from_db_state&lt;/span&gt;&lt;span class="op"&gt;()&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-4"&gt;&lt;a href="#cb3-4" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id="cb3-5"&gt;&lt;a href="#cb3-5" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="co"&gt;// Enforce time usage to have deterministic dates&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-6"&gt;&lt;a href="#cb3-6" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="cf"&gt;try&lt;/span&gt; &lt;span class="op"&gt;(&lt;/span&gt;WithTimeZone tz &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;WithTimeZone&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="st"&gt;&amp;quot;UTC&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;))&lt;/span&gt; &lt;span class="op"&gt;{&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-7"&gt;&lt;a href="#cb3-7" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id="cb3-8"&gt;&lt;a href="#cb3-8" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="dt"&gt;var&lt;/span&gt; result &lt;span class="op"&gt;=&lt;/span&gt; kpiService&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;calculateKpis&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;IO2&lt;span class="op"&gt;,&lt;/span&gt; ALL&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-9"&gt;&lt;a href="#cb3-9" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="dt"&gt;var&lt;/span&gt; normalizedJson &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="fu"&gt;Gson&lt;/span&gt;&lt;span class="op"&gt;().&lt;/span&gt;&lt;span class="fu"&gt;toJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="fu"&gt;normalize&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;result&lt;span class="op"&gt;));&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-10"&gt;&lt;a href="#cb3-10" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id="cb3-11"&gt;&lt;a href="#cb3-11" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="fu"&gt;assertNull&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;result&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;getError&lt;/span&gt;&lt;span class="op"&gt;());&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-12"&gt;&lt;a href="#cb3-12" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        &lt;span class="fu"&gt;assertEquals&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;&lt;span class="dv"&gt;100&lt;/span&gt;&lt;span class="op"&gt;,&lt;/span&gt; result&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;getProgressPercent&lt;/span&gt;&lt;span class="op"&gt;());&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-13"&gt;&lt;a href="#cb3-13" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id="cb3-14"&gt;&lt;a href="#cb3-14" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;        JsonApprovals&lt;span class="op"&gt;.&lt;/span&gt;&lt;span class="fu"&gt;verifyJson&lt;/span&gt;&lt;span class="op"&gt;(&lt;/span&gt;normalizedJson&lt;span class="op"&gt;);&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-15"&gt;&lt;a href="#cb3-15" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;    &lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb3-16"&gt;&lt;a href="#cb3-16" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="op"&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="java"&gt;&lt;code&gt;@Test
+@Sql(scripts = &amp;quot;classpath:fixture/io2_data.sql&amp;quot;)
+void computes_kpis_from_db_state() {
+
+    // Enforce time usage to have deterministic dates
+    try (WithTimeZone tz = new WithTimeZone(&amp;quot;UTC&amp;quot;)) {
+
+        var result = kpiService.calculateKpis(IO2, ALL);
+        var normalizedJson = new Gson().toJson(normalize(result));
+
+        assertNull(result.getError());
+        assertEquals(100, result.getProgressPercent());
+
+        JsonApprovals.verifyJson(normalizedJson);
+    }
+}&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This does mitigate the risk but does not prevent developers from
 updating snapshots without fully understanding the change; however, if
 you are serious about programming, a good approach to this problem is
@@ -83,9 +80,8 @@ fixing a snapshot instead of replacing it when code changes invalidate
 the test. For that, one can leverage tools such as &lt;code&gt;jq&lt;/code&gt; which
 is useful to compare two &lt;code&gt;JSON&lt;/code&gt; files.&lt;/p&gt;
 &lt;p&gt;For example, you can normalize and diff snapshots locally:&lt;/p&gt;
-&lt;div class="sourceCode" id="cb4"&gt;&lt;pre
-class="sourceCode bash"&gt;&lt;code class="sourceCode bash"&gt;&lt;span id="cb4-1"&gt;&lt;a href="#cb4-1" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;&lt;span class="fu"&gt;diff&lt;/span&gt; &lt;span class="op"&gt;&amp;lt;(&lt;/span&gt;&lt;span class="ex"&gt;jq&lt;/span&gt; &lt;span class="st"&gt;&amp;#39;del(.timestamp) | sort_keys&amp;#39;&lt;/span&gt; received.json&lt;span class="op"&gt;)&lt;/span&gt; &lt;span class="dt"&gt;\&lt;/span&gt;&lt;/span&gt;
-&lt;span id="cb4-2"&gt;&lt;a href="#cb4-2" aria-hidden="true" tabindex="-1"&gt;&lt;/a&gt;     &lt;span class="op"&gt;&amp;lt;(&lt;/span&gt;&lt;span class="ex"&gt;jq&lt;/span&gt; &lt;span class="st"&gt;&amp;#39;del(.timestamp) | sort_keys&amp;#39;&lt;/span&gt; approved.json&lt;span class="op"&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="bash"&gt;&lt;code&gt;diff &amp;lt;(jq &amp;#39;del(.timestamp) | sort_keys&amp;#39; received.json) \
+     &amp;lt;(jq &amp;#39;del(.timestamp) | sort_keys&amp;#39; approved.json)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This approach makes any change intentional and specific so that any
 code review can treat it just like any other piece of logic.&lt;/p&gt;
 &lt;h2 id="other-readings"&gt;Other readings&lt;/h2&gt;
