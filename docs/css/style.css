@@ -368,48 +368,43 @@ hr {
     color: var(--text);
 }
 
-/* Keywords */
-code span.kw {
-  color: #005cc5;
-  font-weight: 600;
+/* =========================
+   Light (default)
+   ========================= */
+:root {
+  --fg: #000000;
+  --comment: #aa3731;
+  --def: #325cc0;
+  --const: #7a3e9d;
+  --string: #448c27;
 }
 
-/* Types + classes */
-code span.dt {
-  color: #33ccff;
+/* Base */
+code {
+  color: var(--fg);
 }
 
-/* Methods / functions */
+/* Functions / global defs */
 code span.fu {
-  color: #0080ff;
+  color: var(--def);
 }
 
-code span.kw + span.fu {
-  color: #808000;
+/* Constants (numbers etc.) */
+code span.dv,
+code span.fl,
+code span.bn {
+  color: var(--const);
 }
 
 /* Strings */
 code span.st {
-  color: #009926;
+  color: var(--string);
 }
 
 /* Comments */
 code span.co {
-  color: #6a737d;
-  font-style: italic;
+  color: var(--comment);
 }
-
-/* Numbers */
-code span.dv,
-code span.fl,
-code span.bn {
-  color: #fab387;
-}
-
-/* Annotations */
-/* code span.at { */
-/*   color: #f7833b; */
-/* } */
 
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
@@ -420,6 +415,12 @@ code span.bn {
 		--surface: #2d2d2d;
 		--border: #444;
 		--link: #fab387;
+
+        --fg: #cecece;
+        --comment: #dfdf8e;
+        --def: #71ade7;
+        --const: #cc8bc9;
+        --string: #95cb82;
 	}
 
 	h1,
@@ -434,48 +435,4 @@ code span.bn {
 	article a:visited {
 		color: var(--link);
 	}
-
-	/* Keywords */
-	code span.kw {
-	  color: #005cc5;
-	  font-weight: 600;
-	}
-
-	/* Types + classes */
-	code span.dt {
-	  color: #33ccff;
-	}
-
-	/* Methods / functions */
-	code span.fu {
-	  color: #99ccff;
-	}
-
-	code span.kw + span.fu {
-	  color: #f7f76e;
-	}
-
-	/* Strings */
-	code span.st {
-	  color: #66ff8c;
-	}
-
-	/* Comments */
-	code span.co {
-	  color: #6a737d;
-	  font-style: italic;
-	}
-
-	/* Numbers */
-	code span.dv,
-	code span.fl,
-	code span.bn {
-	  color: #fab387;
-	}
-
-	/* Annotations */
-	/* code span.at { */
-	/*   color: #fab387; */
-	/* } */
-
 }
