@@ -5,7 +5,7 @@ description: Knowing how to ask questions is quite handy in LLM era
 lang: en
 ---
 
-## Stack Overflow is a painful experience
+## Context
 
 Stack Overflow is known to be a painful experience where emotionless people
 criticize your way to pose questions and downvote your low-effort posts down to
